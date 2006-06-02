@@ -3,23 +3,24 @@
 #include "itkCommand.h"
 #include "itkSimpleFilterWatcher.h"
 
-#include "itkImageFilter.h"
+#include "itkMaximumEntropyThresholdImageFilter.h"
 
 
 int main(int, char * argv[])
 {
   const int dim = 2;
   
-  typedef unsigned char PType;
+  typedef unsigned short PType;
   typedef itk::Image< PType, dim > IType;
 
   typedef itk::ImageFileReader< IType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageFilter< IType, IType > FilterType;
+  typedef itk::MaximumEntropyThresholdImageFilter< IType, IType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
+  filter->SetNumberOfHistogramBins( atoi(argv[3]) );
 
   itk::SimpleFilterWatcher watcher(filter, "filter");
 
